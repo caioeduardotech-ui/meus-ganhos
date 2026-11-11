@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meus Ganhos</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#14181f;--mut:#6b7280;--bd:#e3e6ea;--ac:#2563eb;--acx:#fff;--bad:#dc2626;--gold:#b45309;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1216;--card:#1a1f26;--tx:#eef1f5;--mut:#9aa3b0;--bd:#2a313b;--ac:#60a5fa;--acx:#0b1220;--bad:#f87171;--gold:#fbbf24}}
+:root[data-theme="dark"]{--bg:#0f1216;--card:#1a1f26;--tx:#eef1f5;--mut:#9aa3b0;--bd:#2a313b;--ac:#60a5fa;--acx:#0b1220;--bad:#f87171;--gold:#fbbf24}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:16px}
+main{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 4px}
+h2{font-size:16px;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:13px;color:var(--mut);margin-bottom:4px}
+input,select,textarea{width:100%;font-size:17px;padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-family:inherit}
+textarea{font-size:13px;min-height:90px}
+.full{grid-column:1/-1}
+button{font-size:16px;font-weight:600;border:0;border-radius:10px;padding:13px;cursor:pointer;background:var(--ac);color:var(--acx);width:100%}
+button.sec{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+button.on{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+.prev{display:flex;justify-content:space-between;gap:8px;margin:12px 0;font-size:14px;color:var(--mut)}
+.prev b{color:var(--tx);display:block;font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stats b{display:block;font-size:18px}
+.stats span{font-size:12px;color:var(--mut)}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;white-space:nowrap}
+th,td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--bd)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mut);font-weight:600;font-size:12px}
+.best td{color:var(--gold);font-weight:700}
+.x{background:none;color:var(--bad);border:1px solid var(--bad);width:auto;padding:6px 10px;font-size:13px}
+.x.ed{color:var(--ac);border-color:var(--ac);margin-right:6px}
+.res{font-size:22px;font-weight:700;margin:12px 0;color:var(--ac)}
+.row{display:flex;gap:10px}
+.msg{font-size:13px;color:var(--mut);margin-top:8px;min-height:18px}
+.track{height:12px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin:6px 0}
+.fill{height:100%;width:0;background:var(--ac)}
+.sub{font-size:13px;color:var(--mut);margin:0 0 12px}
+main{padding-bottom:96px}
+section{display:none}section.on{display:block}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px);z-index:10}
+nav button{flex:1;width:auto;background:none;color:var(--mut);border:0;border-radius:0;padding:9px 4px;font-size:12px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button .i{font-size:21px;line-height:1}
+nav button.on{color:var(--tx);background:var(--bg)}
+@media (min-width:900px){
+nav{top:0;bottom:auto;right:auto;width:210px;flex-direction:column;border-top:0;border-right:1px solid var(--bd);padding:20px 10px;gap:4px;padding-top:calc(20px + env(safe-area-inset-top,0px))}
+nav button{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;font-size:15px;padding:12px;border-radius:10px}
+nav button.on{background:var(--bg)}
+body{padding-left:210px}
+main{padding-bottom:24px}
+}
+#menuFechar,#menuAbrir{display:none}
+#menuAbrir{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:10px;z-index:11;width:auto;padding:9px 14px;font-size:14px;background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+@media (min-width:900px){
+#menuFechar{display:flex;margin-bottom:8px;border:1px solid var(--bd);color:var(--mut);font-size:13px}
+body.menu-off nav{display:none}
+body.menu-off{padding-left:0}
+body.menu-off #menuAbrir{display:block}
+}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .h{font-size:11px;color:var(--mut);text-align:center;padding-bottom:2px}
+button.cd{width:100%;min-height:52px;padding:5px 0;font-size:14px;font-weight:600;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.1}
+button.cd small{font-size:10px;font-weight:600}
+button.cd.trab{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+button.cd.folga{background:transparent;color:var(--gold);border:2px solid var(--gold)}
+button.cd.auto{background:transparent;color:var(--gold);border:2px dashed var(--gold);opacity:.8}
+button.cd.pend{background:var(--bd);color:var(--mut)}
+button.cd.fora{opacity:.35;background:transparent;border-style:dashed}
+button.cd.hj{box-shadow:inset 0 0 0 2px var(--tx)}
+button.cd.sel{outline:2px solid var(--tx);outline-offset:1px}
+.legenda{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--mut);margin-top:10px}
+.lg{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.lg.trab{background:var(--ac)}.lg.folga{border:2px solid var(--gold)}.lg.auto{border:2px dashed var(--gold)}.lg.pend{background:var(--mut);opacity:.4}
+</style>
+</head>
+<body>
+<nav id="nav">
+<button id="menuFechar" aria-label="Recolher menu">◀ Recolher menu</button>
+<button data-pg="hoje" class="on"><span class="i">🏠</span><span>Hoje</span></button>
+<button data-pg="historico"><span class="i">📋</span><span>Histórico</span></button>
+<button data-pg="gastos"><span class="i">💸</span><span>Gastos</span></button>
+<button data-pg="resumo"><span class="i">📊</span><span>Resumo</span></button>
+<button data-pg="backup"><span class="i">☁️</span><span>Backup</span></button>
+</nav>
+<button id="menuAbrir" aria-label="Abrir menu">☰ Menu</button>
+<main>
+<h1>🚗 Meus Ganhos</h1>
+<div class="sub" id="status">Salvo neste celular.</div>
+
+<section id="pg-hoje" class="on">
+<div class="card">
+<h2>🎯 Metas (líquido)</h2>
+<div class="grid">
+<div><label for="mDia">Meta por dia (R$)</label><input id="mDia" type="number" inputmode="decimal" placeholder="300"></div>
+<div><label for="mSem">Meta por semana (R$)</label><input id="mSem" type="number" inputmode="decimal" placeholder="1500"></div>
+<div class="full"><label for="mMes">Meta por mês (R$)</label><input id="mMes" type="number" inputmode="decimal" placeholder="6000"></div>
+</div>
+<div style="margin-top:12px"><b style="font-size:14px">Hoje</b><div class="track"><div class="fill" id="bD"></div></div><div class="msg" style="margin:0" id="tD"></div></div>
+<div style="margin-top:12px"><b style="font-size:14px">Esta semana (segunda a domingo)</b><div class="track"><div class="fill" id="bW"></div></div><div class="msg" style="margin:0" id="tW"></div></div>
+<div style="margin-top:12px"><b style="font-size:14px">Este mês</b><div class="track"><div class="fill" id="bM"></div></div><div class="msg" style="margin:0" id="tM"></div><div class="msg" style="white-space:pre-line;margin-top:6px" id="pM"></div></div>
+</div>
+
+<div class="card">
+<h2 id="tForm">Registrar o dia</h2>
+<div class="grid">
+<div><label for="data">Data</label><input id="data" type="date"></div>
+<div><label for="plat">Plataforma</label><select id="plat"><option>99</option><option>Uber</option><option>99 + Uber</option></select></div>
+<div class="full"><label for="fat">Faturamento bruto (R$)</label><input id="fat" type="number" inputmode="decimal" step="0.01" placeholder="230,00"></div>
+<div><label for="h">Horas trabalhadas</label><input id="h" type="number" inputmode="numeric" min="0" placeholder="5"></div>
+<div><label for="m">Minutos</label><input id="m" type="number" inputmode="numeric" min="0" max="59" placeholder="0"></div>
+<div><label for="km">Quilometragem do dia (km)</label><input id="km" type="number" inputmode="decimal" step="0.1" placeholder="80"></div>
+<div><label for="med">Média (km/L)</label><input id="med" type="number" inputmode="decimal" step="0.1" placeholder="6,0"></div>
+<div><label for="preco">Preço do litro (R$)</label><input id="preco" type="number" inputmode="decimal" step="0.01"></div>
+<div><label for="out">Outros gastos (R$)</label><input id="out" type="number" inputmode="decimal" step="0.01" placeholder="0"></div>
+<div class="full"><label for="corr">Número de corridas (opcional)</label><input id="corr" type="number" inputmode="numeric" min="0" placeholder="12"></div>
+</div>
+<div class="prev">
+<div>Ganho por km<b id="pKm">–</b></div>
+<div>Ganho por hora<b id="pH">–</b></div>
+<div>Por corrida<b id="pC">–</b></div>
+<div>Líquido (livre)<b id="pLiq">–</b></div>
+</div>
+<button id="salvar">Salvar dia</button>
+<button class="sec" id="cancelar" style="margin-top:8px;display:none">Cancelar edição</button>
+<div class="msg" id="msg"></div>
+</div>
+
+<div class="card">
+<h2>Calculadora de consumo (prova real)</h2>
+<div class="msg" style="margin:-6px 0 10px">Ao abastecer, coloque os km rodados desde o último abastecimento e o valor pago. O site confere se o consumo bate.</div>
+<div class="grid">
+<div><label for="ckm">Km rodados</label><input id="ckm" type="number" inputmode="decimal" step="0.1" placeholder="300"></div>
+<div><label for="cpago">Valor pago (R$)</label><input id="cpago" type="number" inputmode="decimal" step="0.01" placeholder="150,00"></div>
+<div><label for="cpreco">Preço do litro (R$)</label><input id="cpreco" type="number" inputmode="decimal" step="0.01"></div>
+<div><label for="clt">Litros (se souber)</label><input id="clt" type="number" inputmode="decimal" step="0.01" placeholder="calcula sozinho"></div>
+<div class="full"><label for="cpainel">Média do painel do carro (km/L, opcional)</label><input id="cpainel" type="number" inputmode="decimal" step="0.1" placeholder="6,0"></div>
+</div>
+<div class="res" id="cres">–</div>
+<div id="cdet" style="white-space:pre-line;font-size:14px;margin:-6px 0 12px"></div>
+<button class="sec" id="usar">Usar como média do dia</button>
+<div class="msg" id="cmsg"></div>
+</div>
+</section>
+
+<section id="pg-historico">
+<div class="card">
+<h2>Histórico <small style="font-weight:400;color:var(--mut)">(🏆 = melhor líquido)</small></h2>
+<div class="wrap"><table>
+<thead><tr><th>Dia</th><th>App</th><th>Bruto</th><th>Tempo</th><th>Km</th><th>km/L</th><th>R$/km</th><th>R$/h</th><th>Corr.</th><th>R$/corr.</th><th>Líquido</th><th></th></tr></thead>
+<tbody id="corpo"></tbody>
+</table></div>
+<div id="vazio" class="msg">Nenhum dia salvo ainda.</div>
+<button class="sec" id="copiar" style="margin-top:12px">Copiar p/ WhatsApp</button>
+</div>
+</section>
+
+<section id="pg-gastos">
+<div class="card">
+<h2 id="gTit">Registrar gasto</h2>
+<div class="grid">
+<div><label for="gData">Data</label><input id="gData" type="date"></div>
+<div><label for="gCat">Categoria</label><select id="gCat"></select></div>
+<div class="full"><label for="gVal">Valor (R$)</label><input id="gVal" type="number" inputmode="decimal" step="0.01" placeholder="50,00"></div>
+<div class="full"><label for="gDesc">Descrição (opcional)</label><input id="gDesc" type="text" maxlength="60" placeholder="Ex.: troca de óleo"></div>
+</div>
+<button id="gSalvar" style="margin-top:12px">Salvar gasto</button>
+<button class="sec" id="gCancelar" style="margin-top:8px;display:none">Cancelar edição</button>
+<div class="msg" id="gMsg"></div>
+</div>
+
+<div class="card">
+<h2>Este mês</h2>
+<div class="stats">
+<div><b id="gTot">R$ 0,00</b><span>gastos no mês</span></div>
+<div><b id="gLiq">R$ 0,00</b><span>líquido do mês</span></div>
+<div><b id="gReal">R$ 0,00</b><span>lucro real</span></div>
+</div>
+<div class="wrap" style="margin-top:12px"><table>
+<thead><tr><th>Categoria</th><th>Total</th></tr></thead>
+<tbody id="corpoGC"></tbody>
+</table></div>
+<div class="msg">O líquido dos dias já desconta uma estimativa de combustível. Por isso, gastos da categoria Combustível não são descontados de novo no lucro real.</div>
+</div>
+
+<div class="card">
+<h2>Todos os gastos</h2>
+<div class="wrap"><table>
+<thead><tr><th>Dia</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th></th></tr></thead>
+<tbody id="corpoG"></tbody>
+</table></div>
+<div id="gVazio" class="msg">Nenhum gasto registrado ainda.</div>
+</div>
+</section>
+
+<section id="pg-resumo">
+<div class="card">
+<h2>📅 Calendário</h2>
+<div class="row" style="align-items:center;margin-bottom:10px">
+<button class="sec" id="calPrev" style="width:56px" aria-label="Mês anterior">◀</button>
+<div id="calTit" style="flex:1;text-align:center;font-weight:700"></div>
+<button class="sec" id="calNext" style="width:56px" aria-label="Próximo mês">▶</button>
+</div>
+<div class="cal" id="calGrid"></div>
+<div class="legenda"><span><i class="lg trab"></i>Trabalhado</span><span><i class="lg folga"></i>Folga</span><span><i class="lg auto"></i>Folga automática</span><span><i class="lg pend"></i>Não informado</span></div>
+<div class="stats" style="margin-top:14px">
+<div><b id="cTrab">0</b><span>dias trabalhados</span></div>
+<div><b id="cFolga">0</b><span>folgas no mês</span></div>
+<div><b id="cMedia">R$ 0,00</b><span>líquido por dia trabalhado</span></div>
+</div>
+<div class="msg" id="cAviso"></div>
+<div class="msg" id="cInfo" style="margin-top:12px"></div>
+<div id="cAcoes"></div>
+<label for="cEsp" style="margin-top:14px">Dias sem registro para virar folga automática</label>
+<input id="cEsp" type="number" inputmode="numeric" min="1" max="10">
+</div>
+<div class="card">
+<h2>Resumo</h2>
+<div class="stats">
+<div><b id="sDias">0</b><span>dias</span></div>
+<div><b id="sBruto">R$ 0</b><span>bruto total</span></div>
+<div><b id="sLiq">R$ 0</b><span>líquido total</span></div>
+</div>
+<div class="row" style="margin:14px 0 8px">
+<button class="sec on" id="pSem">Por semana</button>
+<button class="sec" id="pMes">Por mês</button>
+</div>
+<div class="wrap"><table>
+<thead><tr><th>Período</th><th>Dias</th><th>Bruto</th><th>Líquido</th><th>Líq./hora</th><th>R$/corrida</th></tr></thead>
+<tbody id="corpoP"></tbody>
+</table></div>
+</div>
+
+<div class="card">
+<h2>99 x Uber</h2>
+<div class="wrap"><table>
+<thead><tr><th>App</th><th>Dias</th><th>Bruto</th><th>Líquido</th><th>R$/km</th><th>Líq./hora</th><th>R$/corrida</th></tr></thead>
+<tbody id="corpoC"></tbody>
+</table></div>
+<div class="msg" id="veredito"></div>
+</div>
+</section>
+
+<section id="pg-backup">
+<div class="card">
+<h2>Backup</h2>
+<div class="sub">Guarda uma cópia de todos os dias e metas. Dá para restaurar em outro aparelho.</div>
+<div class="row">
+<button class="sec" id="bBaixar">Baixar backup</button>
+<button class="sec" id="bTexto">Ver texto</button>
+</div>
+<textarea id="bTxt" style="margin-top:10px" placeholder="O texto do backup aparece aqui. Para restaurar, cole o texto e toque em Restaurar."></textarea>
+<button class="sec" id="bRest" style="margin-top:8px">Restaurar do texto</button>
+<div class="msg" id="bMsg"></div>
+<hr style="border:0;border-top:1px solid var(--bd);margin:16px 0">
+<h2>☁️ Sincronização</h2>
+<div class="sub">O código secreto liga este aparelho aos seus dados na nuvem. Para usar em outro celular, copie o link de acesso e abra lá. Não compartilhe com outras pessoas.</div>
+<div class="row"><button class="sec" id="sLink">Copiar link de acesso</button><button class="sec" id="sAgora">Sincronizar agora</button></div>
+<label for="sCod" style="margin-top:10px">Código deste aparelho</label>
+<input id="sCod" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+<button class="sec" id="sUsar" style="margin-top:8px">Usar este código</button>
+<div class="msg" id="sMsg"></div>
+</div>
+</section>
+
+</main>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var S,editId=null,per="sem";
+var CATS=["Combustível","Alimentação","Manutenção","Pneus","Óleo e revisão","Pedágio","Estacionamento","Lavagem","Outros"];
+var gEdit=null,calYM=null,calSel=null;
+function norm(c){return {dias:c.dias||[],meta:c.meta||{dia:0,semana:0},preco:c.preco||3.49,gastos:c.gastos||[],folgas:c.folgas||[],espera:c.espera||3,t:c.t||0}}
+function lsLoad(){try{var v=localStorage.getItem("ganhos:estado");if(v)return norm(JSON.parse(v));var d=localStorage.getItem("ganhos:dias");if(d){var p=localStorage.getItem("ganhos:preco");return norm({dias:JSON.parse(d),preco:p?JSON.parse(p):3.49,t:Date.now()})}}catch(e){}return norm({})}
+function lsSave(){try{localStorage.setItem("ganhos:estado",JSON.stringify(S))}catch(e){}}
+function setStatus(t){$("status").textContent=t}
+var FB={key:"AIzaSyBjatRySs3w71DgnWrbNQbQlNuwcL_syEQ",pid:"meus-ganhos-722e3"};
+var cod=null;
+function getCod(){
+  if(!cod){try{cod=localStorage.getItem("ganhos:codigo")}catch(e){}}
+  if(!cod){var a=new Uint8Array(14);crypto.getRandomValues(a);cod=Array.from(a).map(function(x){return ("0"+x.toString(16)).slice(-2)}).join("");try{localStorage.setItem("ganhos:codigo",cod)}catch(e){}}
+  return cod;
+}
+function fbUrl(){return "https://firestore.googleapis.com/v1/projects/"+FB.pid+"/databases/(default)/documents/ganhos/"+encodeURIComponent(cod)+"?key="+FB.key}
+function cloudSave(){
+  if(!cod)return;
+  fetch(fbUrl(),{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({fields:{json:{stringValue:JSON.stringify(S)},t:{integerValue:String(S.t)}}})})
+   .then(function(r){if(!r.ok)throw 0;setStatus("☁️ Salvo na nuvem")})
+   .catch(function(){setStatus("⚠️ Não consegui salvar na nuvem. Salvo neste celular.")});
+}
+function persist(){S.t=Date.now();lsSave();cloudSave()}
+async function initCloud(){
+  var m=location.hash.match(/c=([a-z0-9]{10,})/);
+  if(m){cod=m[1];try{localStorage.setItem("ganhos:codigo",cod)}catch(e){}try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
+  getCod();$("sCod").value=cod;
+  try{
+    var r=await fetch(fbUrl());
+    if(r.status===404){if(S.dias.length)cloudSave();else setStatus("☁️ Sincronizado");return}
+    if(!r.ok)throw 0;
+    var j=await r.json();var c=norm(JSON.parse(j.fields.json.stringValue));
+    if(c.t>S.t){S=c;lsSave();fillStatic();renderAll();setStatus("☁️ Sincronizado")}
+    else if(S.t>c.t)cloudSave();
+    else setStatus("☁️ Sincronizado");
+  }catch(e){setStatus("Salvo neste celular (sem conexão com a nuvem).")}
+}
+function brl(n){return "R$ "+n.toFixed(2).replace(".",",")}
+function f1(n){return n.toFixed(1).replace(".",",")}
+function num(id){var v=parseFloat(String($(id).value).replace(",","."));return isNaN(v)?0:v}
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function hoje(){return iso(new Date())}
+function wk(s){var d=new Date(s+"T12:00:00");d.setDate(d.getDate()-((d.getDay()+6)%7));return iso(d)}
+function addDias(s,n){var d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return iso(d)}
+function dataBR(s){var p=s.split("-");return p[2]+"/"+p[1]}
+function tempo(min){return Math.floor(min/60)+"h"+String(Math.round(min%60)).padStart(2,"0")}
+function calc(d){
+  var comb=d.med>0?d.km/d.med*d.preco:0,liq=d.fat-comb-d.out,hrs=d.min/60;
+  return {liq:liq,pkm:d.km>0?d.fat/d.km:0,ph:hrs>0?d.fat/hrs:0,pc:d.corr>0?d.fat/d.corr:0};
+}
+function agg(l){var a={n:l.length,bruto:0,liq:0,min:0,km:0,corr:0,brutoC:0};l.forEach(function(d){a.bruto+=d.fat;a.liq+=calc(d).liq;a.min+=d.min;a.km+=d.km;if(d.corr>0){a.corr+=d.corr;a.brutoC+=d.fat}});a.pc=a.corr>0?a.brutoC/a.corr:0;a.lh=a.min>0?a.liq/(a.min/60):0;a.pkm=a.km>0?a.bruto/a.km:0;return a}
+function leitura(){return {fat:num("fat"),min:num("h")*60+num("m"),km:num("km"),med:num("med"),preco:num("preco"),out:num("out"),corr:Math.round(num("corr"))}}
+function preview(){
+  var c=calc(leitura());
+  $("pKm").textContent=c.pkm?brl(c.pkm)+"/km":"–";
+  $("pH").textContent=c.ph?brl(c.ph)+"/h":"–";
+  $("pC").textContent=c.pc?brl(c.pc):"–";
+  $("pLiq").textContent=num("fat")?brl(c.liq):"–";
+}
+function cell(tr,t){var td=document.createElement("td");td.textContent=t;tr.appendChild(td);return td}
+function arm(b,label,fn){
+  b.onclick=function(){
+    if(!b.dataset.arm){b.dataset.arm="1";b.dataset.old=b.textContent;b.textContent="Confirmar?";b.style.background="var(--bad)";b.style.color="#fff";
+      setTimeout(function(){if(b.isConnected&&b.dataset.arm){delete b.dataset.arm;b.textContent=b.dataset.old;b.style.background="";b.style.color=""}},4000);return}
+    fn();
+  };
+}
+function setBar(f,t,val,meta){
+  if(!(meta>0)){f.style.width="0";t.textContent="Defina a meta acima.";return}
+  f.style.width=Math.min(100,Math.max(0,val/meta*100))+"%";
+  t.textContent=brl(val)+" de "+brl(meta)+" ("+Math.round(val/meta*100)+"%)"+(val>=meta?" · meta batida 🎉":" · faltam "+brl(meta-val));
+}
+function renderMetas(){
+  var h=hoje(),w=wk(h);
+  setBar($("bD"),$("tD"),agg(S.dias.filter(function(d){return d.data===h})).liq,S.meta.dia);
+  setBar($("bW"),$("tW"),agg(S.dias.filter(function(d){return wk(d.data)===w})).liq,S.meta.semana);
+  var ym=h.slice(0,7),pp=h.split("-"),diaN=+pp[2],totD=new Date(+pp[0],+pp[1],0).getDate();
+  var lm=agg(S.dias.filter(function(d){return d.data.slice(0,7)===ym})).liq,mm=S.meta.mes||0;
+  setBar($("bM"),$("tM"),lm,mm);
+  var linhas=[];
+  var diasT={};S.dias.forEach(function(d){if(d.data.slice(0,7)===ym)diasT[d.data]=1});
+  var nT=Object.keys(diasT).length;
+  if(lm>0&&nT>0){
+    var media=lm/nT,rest=0;
+    for(var k=diaN;k<=totD;k++){var dk=ym+"-"+String(k).padStart(2,"0");if(diasT[dk])continue;if(S.folgas.indexOf(dk)>=0)continue;rest++}
+    var proj=lm+media*rest;
+    var t="Projeção: o mês fecha com cerca de "+brl(proj)+" de líquido";
+    if(mm>0)t+=proj>=mm?" (acima da meta ✔)":" (abaixo da meta em "+brl(mm-proj)+")";
+    linhas.push(t);
+    linhas.push("Média por dia trabalhado: "+brl(media)+". Faltam "+rest+" dias de trabalho no mês, sem contar as folgas marcadas no calendário.");
+    if(mm>0&&lm<mm&&rest>0)linhas.push("Para bater a meta: "+brl((mm-lm)/rest)+" por dia de trabalho.");
+    if(nT<3)linhas.push("Poucos dias registrados, então a projeção muda bastante.");
+  }else linhas.push("Sem ganhos registrados neste mês ainda.");
+  $("pM").textContent=linhas.join("\n");
+}
+function renderPeriodos(){
+  var g={};
+  S.dias.forEach(function(d){var k=per==="sem"?wk(d.data):d.data.slice(0,7);(g[k]=g[k]||[]).push(d)});
+  var ks=Object.keys(g).sort().reverse().slice(0,10),tb=$("corpoP");tb.innerHTML="";
+  ks.forEach(function(k){
+    var a=agg(g[k]),tr=document.createElement("tr");
+    var lab=per==="sem"?dataBR(k)+" a "+dataBR(addDias(k,6)):k.split("-")[1]+"/"+k.split("-")[0];
+    cell(tr,lab);cell(tr,a.n);cell(tr,brl(a.bruto));cell(tr,brl(a.liq));cell(tr,a.lh?brl(a.lh):"–");cell(tr,a.pc?brl(a.pc):"–");tb.appendChild(tr);
+  });
+  $("pSem").className="sec"+(per==="sem"?" on":"");$("pMes").className="sec"+(per==="mes"?" on":"");
+}
+function renderComparar(){
+  var tb=$("corpoC");tb.innerHTML="";var r={};
+  ["99","Uber","99 + Uber"].forEach(function(p){
+    var a=agg(S.dias.filter(function(d){return d.plat===p}));r[p]=a;
+    if(!a.n)return;
+    var tr=document.createElement("tr");
+    cell(tr,p);cell(tr,a.n);cell(tr,brl(a.bruto));cell(tr,brl(a.liq));cell(tr,a.pkm?brl(a.pkm):"–");cell(tr,a.lh?brl(a.lh):"–");cell(tr,a.pc?brl(a.pc):"–");tb.appendChild(tr);
+  });
+  var v=$("veredito");
+  if(r["99"].n&&r["Uber"].n){
+    var a=r["99"],b=r["Uber"],w=a.lh>=b.lh?"99":"Uber",dif=Math.abs(a.lh-b.lh);
+    v.textContent="Por hora, a "+w+" rendeu "+brl(dif)+" a mais (líquido). Dias com os dois apps juntos ficam separados.";
+  }else v.textContent="Registre dias na 99 e na Uber para comparar.";
+}
+function renderHist(){
+  var corpo=$("corpo");corpo.innerHTML="";
+  var ord=S.dias.slice().sort(function(a,b){return a.data<b.data?1:(a.data>b.data?-1:b.id-a.id)});
+  var best=-Infinity,tb=0,tl=0;
+  ord.forEach(function(d){var l=calc(d).liq;tb+=d.fat;tl+=l;if(l>best)best=l});
+  ord.forEach(function(d){
+    var c=calc(d),tr=document.createElement("tr"),isB=c.liq===best&&ord.length>1;
+    if(isB)tr.className="best";
+    cell(tr,(isB?"🏆 ":"")+dataBR(d.data));cell(tr,d.plat||"–");cell(tr,brl(d.fat));cell(tr,tempo(d.min));cell(tr,d.km+" km");cell(tr,f1(d.med));cell(tr,brl(c.pkm));cell(tr,brl(c.ph));cell(tr,d.corr>0?d.corr:"–");cell(tr,c.pc?brl(c.pc):"–");cell(tr,brl(c.liq));
+    var td=document.createElement("td"),e=document.createElement("button"),b=document.createElement("button");
+    e.className="x ed";e.textContent="Editar";e.onclick=function(){editar(d)};
+    b.className="x";b.textContent="Apagar";
+    arm(b,"Apagar",function(){S.dias=S.dias.filter(function(x){return x.id!==d.id});persist();renderAll();$("msg").textContent="Dia apagado."});
+    td.appendChild(e);td.appendChild(b);tr.appendChild(td);corpo.appendChild(tr);
+  });
+  $("vazio").style.display=ord.length?"none":"block";
+  $("sDias").textContent=ord.length;$("sBruto").textContent=brl(tb);$("sLiq").textContent=brl(tl);
+}
+function renderAll(){renderHist();renderPeriodos();renderComparar();renderMetas();renderGastos();renderCal()}
+function fillStatic(){
+  $("preco").value=S.preco;$("cpreco").value=S.preco;
+  $("mDia").value=S.meta.dia||"";$("mSem").value=S.meta.semana||"";$("mMes").value=S.meta.mes||"";$("cEsp").value=S.espera;
+}
+function limpar(){
+  ["fat","h","m","km","med","out","corr"].forEach(function(i){$(i).value=""});
+  editId=null;$("tForm").textContent="Registrar o dia";$("salvar").textContent="Salvar dia";$("cancelar").style.display="none";
+  $("data").value=hoje();preview();
+}
+function editar(d){
+  editId=d.id;$("data").value=d.data;$("plat").value=d.plat||"99";$("fat").value=d.fat;
+  $("h").value=Math.floor(d.min/60);$("m").value=Math.round(d.min%60);
+  $("corr").value=d.corr||"";$("km").value=d.km;$("med").value=d.med;$("preco").value=d.preco;$("out").value=d.out||"";
+  $("tForm").textContent="Corrigir o dia "+dataBR(d.data);$("salvar").textContent="Atualizar dia";$("cancelar").style.display="block";
+  $("msg").textContent="";preview();ir("hoje");window.scrollTo({top:0,behavior:"smooth"});
+}
+$("cancelar").onclick=limpar;
+$("salvar").onclick=function(){
+  var d=leitura();
+  if(!d.fat||!d.min||!d.km||!d.med){$("msg").textContent="Preencha faturamento, tempo, km e média.";return}
+  d.plat=$("plat").value;d.data=$("data").value||hoje();
+  if(editId){var i=S.dias.findIndex(function(x){return x.id===editId});d.id=editId;if(i>=0)S.dias[i]=d;else S.dias.push(d)}
+  else{d.id=Date.now();S.dias.push(d)}
+  S.preco=d.preco;S.folgas=S.folgas.filter(function(x){return x!==d.data});persist();
+  var era=!!editId;limpar();renderAll();$("msg").textContent=era?"Dia atualizado ✔":"Dia salvo ✔";
+};
+["mDia","mSem","mMes"].forEach(function(i){$(i).addEventListener("change",function(){S.meta={dia:num("mDia"),semana:num("mSem"),mes:num("mMes")};persist();renderMetas()})});
+$("pSem").onclick=function(){per="sem";renderPeriodos()};
+$("pMes").onclick=function(){per="mes";renderPeriodos()};
+$("copiar").onclick=function(){
+  var ord=S.dias.slice().sort(function(a,b){return a.data<b.data?-1:1});
+  if(!ord.length){$("msg").textContent="Nada para copiar.";return}
+  var t="Meus ganhos\n\n";
+  ord.forEach(function(d){var c=calc(d);t+=dataBR(d.data)+" ("+(d.plat||"–")+"): bruto "+brl(d.fat)+" | "+tempo(d.min)+" | "+d.km+" km | "+brl(c.pkm)+"/km | líquido "+brl(c.liq)+"\n"});
+  var ok=false;
+  try{var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();ok=document.execCommand("copy");document.body.removeChild(ta)}catch(e){}
+  $("msg").textContent=ok?"Copiado! Cole no WhatsApp.":"Não consegui copiar neste aparelho.";
+};
+function backupTxt(){return JSON.stringify({app:"ganhos",dias:S.dias,meta:S.meta,preco:S.preco,gastos:S.gastos,folgas:S.folgas,espera:S.espera})}
+$("bTexto").onclick=function(){$("bTxt").value=backupTxt();$("bTxt").select();$("bMsg").textContent="Copie este texto e guarde em um lugar seguro (por exemplo, mande para você mesmo no WhatsApp)."};
+$("bBaixar").onclick=function(){
+  var txt=backupTxt();$("bTxt").value=txt;
+  try{var u=URL.createObjectURL(new Blob([txt],{type:"application/json"})),a=document.createElement("a");a.href=u;a.download="backup-ganhos-"+hoje()+".json";document.body.appendChild(a);a.click();document.body.removeChild(a);$("bMsg").textContent="Backup baixado."}
+  catch(e){$("bMsg").textContent="Não consegui baixar. Copie o texto acima e guarde."}
+};
+$("sLink").onclick=function(){
+  var l=location.href.split("#")[0]+"#c="+cod,ok=false;
+  try{var ta=document.createElement("textarea");ta.value=l;document.body.appendChild(ta);ta.select();ok=document.execCommand("copy");document.body.removeChild(ta)}catch(e){}
+  $("sMsg").textContent=ok?"Link copiado. Abra no outro celular.":"Não consegui copiar. Use o código abaixo.";
+};
+$("sAgora").onclick=function(){$("sMsg").textContent="Sincronizando...";initCloud().then(function(){$("sMsg").textContent=""})};
+arm($("sUsar"),"Usar",function(){
+  var b=$("sUsar");delete b.dataset.arm;b.textContent="Usar este código";b.style.background="";b.style.color="";
+  var v=$("sCod").value.trim().toLowerCase();
+  if(!/^[a-z0-9]{10,}$/.test(v)){$("sMsg").textContent="Código inválido.";return}
+  cod=v;try{localStorage.setItem("ganhos:codigo",cod)}catch(e){}
+  S.t=0;initCloud().then(function(){$("sMsg").textContent="Código aplicado."});
+});
+arm($("bRest"),"Restaurar",function(){
+  var b=$("bRest");delete b.dataset.arm;b.textContent="Restaurar do texto";b.style.background="";b.style.color="";
+  try{
+    var c=JSON.parse($("bTxt").value);
+    if(c.app!=="ganhos"||!Array.isArray(c.dias))throw 0;
+    S=norm({dias:c.dias,meta:c.meta,preco:c.preco,gastos:c.gastos,folgas:c.folgas,espera:c.espera,t:Date.now()});persist();fillStatic();renderAll();
+    $("bMsg").textContent="Backup restaurado: "+S.dias.length+" dias.";
+  }catch(e){$("bMsg").textContent="Texto de backup inválido."}
+});
+function calcCons(){
+  var km=num("ckm"),pago=num("cpago"),pr=num("cpreco"),lt=num("clt");
+  if(!lt&&pago>0&&pr>0)lt=pago/pr;
+  var r=lt>0&&km>0?km/lt:0;
+  $("cres").textContent=r?r.toFixed(2).replace(".",",")+" km/L":"–";
+  var t=[];
+  if(lt>0)t.push("Litros: "+lt.toFixed(2).replace(".",",")+" L");
+  var custo=pago>0?pago:(lt>0&&pr>0?lt*pr:0);
+  if(km>0&&custo>0)t.push("Custo do combustível: "+brl(custo/km)+" por km");
+  var pn=num("cpainel");
+  if(r&&pn>0){var dif=r-pn;t.push(Math.abs(dif)<0.3?"✔ Bate com o painel ("+f1(pn)+" km/L)":"⚠ O painel diz "+f1(pn)+" km/L, mas o real deu "+f1(Math.abs(dif))+" km/L "+(dif<0?"a menos":"a mais"))}
+  $("cdet").textContent=t.join("\n");return r;
+}
+["ckm","cpago","cpreco","clt","cpainel"].forEach(function(i){$(i).addEventListener("input",calcCons)});
+$("usar").onclick=function(){var r=calcCons();if(!r){$("cmsg").textContent="Preencha km e valor pago (ou litros).";return}$("med").value=r.toFixed(1);preview();$("cmsg").textContent="Média "+f1(r)+" km/L colocada no registro do dia."};
+["fat","h","m","km","med","preco","out","corr"].forEach(function(i){$(i).addEventListener("input",preview)});
+fillCats();S=lsLoad();fillStatic();$("data").value=hoje();$("gData").value=hoje();preview();renderAll();
+function fillCats(){CATS.forEach(function(c){var o=document.createElement("option");o.textContent=c;$("gCat").appendChild(o)})}
+function soma(l){return l.reduce(function(a,g){return a+g.val},0)}
+function renderGastos(){
+  var mes=hoje().slice(0,7),tb=$("corpoG");tb.innerHTML="";
+  var ord=S.gastos.slice().sort(function(a,b){return a.data<b.data?1:(a.data>b.data?-1:b.id-a.id)});
+  ord.forEach(function(g){
+    var tr=document.createElement("tr");
+    cell(tr,dataBR(g.data));cell(tr,g.cat);cell(tr,g.desc||"–");cell(tr,brl(g.val));
+    var td=document.createElement("td"),e=document.createElement("button"),b=document.createElement("button");
+    e.className="x ed";e.textContent="Editar";e.onclick=function(){gEditar(g)};
+    b.className="x";b.textContent="Apagar";
+    arm(b,"Apagar",function(){S.gastos=S.gastos.filter(function(x){return x.id!==g.id});persist();renderGastos();$("gMsg").textContent="Gasto apagado."});
+    td.appendChild(e);td.appendChild(b);tr.appendChild(td);tb.appendChild(tr);
+  });
+  $("gVazio").style.display=ord.length?"none":"block";
+  var dm=S.gastos.filter(function(g){return g.data.slice(0,7)===mes});
+  var tot=soma(dm),semComb=soma(dm.filter(function(g){return g.cat!=="Combustível"}));
+  var liq=agg(S.dias.filter(function(d){return d.data.slice(0,7)===mes})).liq;
+  $("gTot").textContent=brl(tot);$("gLiq").textContent=brl(liq);$("gReal").textContent=brl(liq-semComb);
+  var tc=$("corpoGC");tc.innerHTML="";
+  CATS.map(function(c){return {c:c,v:soma(dm.filter(function(g){return g.cat===c}))}})
+    .filter(function(x){return x.v>0}).sort(function(a,b){return b.v-a.v})
+    .forEach(function(x){var tr=document.createElement("tr");cell(tr,x.c);cell(tr,brl(x.v));tc.appendChild(tr)});
+  if(!tc.children.length){var tr=document.createElement("tr");cell(tr,"Sem gastos neste mês");cell(tr,"–");tc.appendChild(tr)}
+}
+function gLimpar(){
+  $("gVal").value="";$("gDesc").value="";gEdit=null;$("gData").value=hoje();
+  $("gTit").textContent="Registrar gasto";$("gSalvar").textContent="Salvar gasto";$("gCancelar").style.display="none";
+}
+function gEditar(g){
+  gEdit=g.id;$("gData").value=g.data;$("gCat").value=g.cat;$("gVal").value=g.val;$("gDesc").value=g.desc||"";
+  $("gTit").textContent="Corrigir gasto de "+dataBR(g.data);$("gSalvar").textContent="Atualizar gasto";$("gCancelar").style.display="block";
+  $("gMsg").textContent="";window.scrollTo({top:0,behavior:"smooth"});
+}
+$("gCancelar").onclick=gLimpar;
+$("gSalvar").onclick=function(){
+  var v=num("gVal");
+  if(!(v>0)){$("gMsg").textContent="Coloque o valor do gasto.";return}
+  var g={cat:$("gCat").value,val:v,desc:$("gDesc").value.trim(),data:$("gData").value||hoje()};
+  if(gEdit){var i=S.gastos.findIndex(function(x){return x.id===gEdit});g.id=gEdit;if(i>=0)S.gastos[i]=g;else S.gastos.push(g)}
+  else{g.id=Date.now();S.gastos.push(g)}
+  persist();var era=!!gEdit;gLimpar();renderGastos();$("gMsg").textContent=era?"Gasto atualizado ✔":"Gasto salvo ✔";
+};
+function menu(off){document.body.classList.toggle("menu-off",off);try{localStorage.setItem("ganhos:menu",off?"off":"on")}catch(e){}}
+$("menuFechar").onclick=function(){menu(true)};
+$("menuAbrir").onclick=function(){menu(false)};
+try{if(localStorage.getItem("ganhos:menu")==="off")menu(true)}catch(e){}
+function diffD(a,b){return Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/864e5)}
+function primeiroDia(){var m=null;S.dias.forEach(function(d){if(!m||d.data<m)m=d.data});return m}
+function stDia(ds){
+  if(S.dias.some(function(d){return d.data===ds}))return "trab";
+  if(S.folgas.indexOf(ds)>=0)return "folga";
+  var h=hoje(),p=primeiroDia();
+  if(ds>h)return "futuro";
+  if(!p||ds<p)return "antes";
+  return diffD(ds,h)>S.espera?"auto":"pend";
+}
+function setFolga(ds,on){
+  if(on){if(S.folgas.indexOf(ds)<0)S.folgas.push(ds)}else S.folgas=S.folgas.filter(function(x){return x!==ds});
+  persist();renderCal();renderMetas();
+}
+function novoDia(ds){limpar();$("data").value=ds;ir("hoje")}
+function mudaMes(n){
+  var d=new Date(+calYM.slice(0,4),+calYM.slice(5,7)-1+n,1);
+  calYM=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");calSel=null;renderCal();
+}
+function seq(){
+  var d=hoje(),n=0;if(stDia(d)!=="trab")d=addDias(d,-1);
+  while(stDia(d)==="trab"&&n<400){n++;d=addDias(d,-1)}
+  return n;
+}
+function renderCalInfo(){
+  var box=$("cAcoes"),info=$("cInfo");box.innerHTML="";
+  if(!calSel){info.textContent="Toque em um dia para ver detalhes ou marcar uma folga.";return}
+  function btn(t,fn){var b=document.createElement("button");b.className="sec";b.textContent=t;b.style.marginTop="8px";b.onclick=fn;box.appendChild(b)}
+  var st=stDia(calSel),lab=dataBR(calSel)+": ",ds=calSel;
+  if(st==="trab"){
+    var regs=S.dias.filter(function(d){return d.data===ds});
+    info.textContent=lab+"trabalhado. "+regs.map(function(r){return (r.plat||"–")+", líquido "+brl(calc(r).liq)}).join(" | ");
+    regs.forEach(function(r){btn("Editar dia ("+(r.plat||"–")+")",function(){editar(r)})});
+  }else if(st==="folga"){
+    info.textContent=lab+"folga marcada.";btn("Remover folga",function(){setFolga(ds,false)});
+  }else if(st==="auto"){
+    info.textContent=lab+"folga automática (mais de "+S.espera+" dias sem registro).";
+    btn("Confirmar como folga",function(){setFolga(ds,true)});btn("Registrar esse dia",function(){novoDia(ds)});
+  }else if(st==="pend"){
+    info.textContent=lab+"não informado. Passando de "+S.espera+" dias sem registro, vira folga automática.";
+    btn("Marcar como folga",function(){setFolga(ds,true)});btn("Registrar esse dia",function(){novoDia(ds)});
+  }else if(st==="futuro"){
+    info.textContent=lab+"dia futuro.";btn("Marcar como folga",function(){setFolga(ds,true)});
+  }else{
+    info.textContent=lab+"antes do primeiro registro, não conta como folga.";btn("Marcar como folga",function(){setFolga(ds,true)});
+  }
+}
+function renderCal(){
+  if(!calYM)calYM=hoje().slice(0,7);
+  var y=+calYM.slice(0,4),m=+calYM.slice(5,7),tot=new Date(y,m,0).getDate();
+  var nomes=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+  $("calTit").textContent=nomes[m-1]+" de "+y;
+  var g=$("calGrid");g.innerHTML="";
+  ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].forEach(function(n){var d=document.createElement("div");d.className="h";d.textContent=n;g.appendChild(d)});
+  var off=(new Date(y,m-1,1).getDay()+6)%7;
+  for(var i=0;i<off;i++)g.appendChild(document.createElement("div"));
+  var h=hoje(),nT=0,nF=0,lt=0;
+  for(var k=1;k<=tot;k++){
+    (function(ds){
+      var st=stDia(ds),b=document.createElement("button"),n=document.createElement("span");
+      b.className="cd "+(st==="trab"||st==="folga"||st==="auto"?st:(st==="pend"?"pend":"fora"))+(ds===h?" hj":"")+(ds===calSel?" sel":"");
+      n.textContent=+ds.slice(8);b.appendChild(n);
+      var sm=document.createElement("small");
+      if(st==="trab"){var l=agg(S.dias.filter(function(d){return d.data===ds})).liq;sm.textContent=Math.round(l);nT++;lt+=l}
+      else if(st==="folga"){sm.textContent="F";nF++}
+      else if(st==="auto"){sm.textContent="A";nF++}
+      if(sm.textContent)b.appendChild(sm);
+      b.onclick=function(){calSel=ds;renderCal()};
+      g.appendChild(b);
+    })(calYM+"-"+String(k).padStart(2,"0"));
+  }
+  $("cTrab").textContent=nT;$("cFolga").textContent=nF;$("cMedia").textContent=nT?brl(lt/nT):"–";
+  var sq=seq();$("cAviso").textContent=sq>=10?"⚠ "+sq+" dias seguidos trabalhando. Que tal uma folga?":"";
+  renderCalInfo();
+}
+$("calPrev").onclick=function(){mudaMes(-1)};
+$("calNext").onclick=function(){mudaMes(1)};
+$("cEsp").addEventListener("change",function(){S.espera=Math.min(10,Math.max(1,Math.round(num("cEsp"))||3));$("cEsp").value=S.espera;persist();renderCal()});
+var PGS=["hoje","historico","gastos","resumo","backup"];
+function ir(p,push){
+  if(PGS.indexOf(p)<0)p="hoje";
+  PGS.forEach(function(n){$("pg-"+n).className=n===p?"on":""});
+  Array.prototype.forEach.call(document.querySelectorAll("#nav button[data-pg]"),function(b){b.className=b.dataset.pg===p?"on":""});
+  if(push!==false&&location.hash!=="#"+p){try{location.hash=p}catch(e){}}
+  window.scrollTo(0,0);
+}
+Array.prototype.forEach.call(document.querySelectorAll("#nav button[data-pg]"),function(b){b.onclick=function(){ir(b.dataset.pg)}});
+window.addEventListener("hashchange",function(){ir(location.hash.slice(1),false)});
+ir(location.hash.slice(1),false);
+initCloud();
+document.addEventListener("visibilitychange",function(){if(!document.hidden)initCloud()});
+</script>
+</body>
+</html>
