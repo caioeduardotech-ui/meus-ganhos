@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meus Ganhos</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav id="nav">
+<button id="menuFechar" aria-label="Recolher menu">◀ Recolher menu</button>
+<button data-pg="hoje" class="on"><span class="i">🏠</span><span>Hoje</span></button>
+<button data-pg="historico"><span class="i">📋</span><span>Histórico</span></button>
+<button data-pg="gastos"><span class="i">💸</span><span>Gastos</span></button>
+<button data-pg="resumo"><span class="i">📊</span><span>Resumo</span></button>
+<button data-pg="backup"><span class="i">☁️</span><span>Backup</span></button>
+</nav>
+<button id="menuAbrir" aria-label="Abrir menu">☰ Menu</button>
+<main>
+<h1>🚗 Meus Ganhos</h1>
+<div class="sub" id="status">Salvo neste celular.</div>
+
+<section id="pg-hoje" class="on">
+<div class="card">
+<h2>🎯 Metas (líquido)</h2>
+<div class="grid">
+<div><label for="mDia">Meta por dia (R$)</label><input id="mDia" type="number" inputmode="decimal" placeholder="300"></div>
+<div><label for="mSem">Meta por semana (R$)</label><input id="mSem" type="number" inputmode="decimal" placeholder="1500"></div>
+<div class="full"><label for="mMes">Meta por mês (R$)</label><input id="mMes" type="number" inputmode="decimal" placeholder="6000"></div>
+</div>
+<div style="margin-top:12px"><b style="font-size:14px">Hoje</b><div class="track"><div class="fill" id="bD"></div></div><div class="msg" style="margin:0" id="tD"></div></div>
+<div style="margin-top:12px"><b style="font-size:14px">Esta semana (segunda a domingo)</b><div class="track"><div class="fill" id="bW"></div></div><div class="msg" style="margin:0" id="tW"></div></div>
+<div style="margin-top:12px"><b style="font-size:14px">Este mês</b><div class="track"><div class="fill" id="bM"></div></div><div class="msg" style="margin:0" id="tM"></div><div class="msg" style="white-space:pre-line;margin-top:6px" id="pM"></div></div>
+</div>
+
+<div class="card">
+<h2 id="tForm">Registrar o dia</h2>
+<div class="grid">
+<div><label for="data">Data</label><input id="data" type="date"></div>
+<div><label for="plat">Plataforma</label><select id="plat"><option>99</option><option>Uber</option><option>99 + Uber</option></select></div>
+<div class="full"><label for="fat">Faturamento bruto (R$)</label><input id="fat" type="number" inputmode="decimal" step="0.01" placeholder="230,00"></div>
+<div><label for="h">Horas trabalhadas</label><input id="h" type="number" inputmode="numeric" min="0" placeholder="5"></div>
+<div><label for="m">Minutos</label><input id="m" type="number" inputmode="numeric" min="0" max="59" placeholder="0"></div>
+<div><label for="km">Quilometragem do dia (km)</label><input id="km" type="number" inputmode="decimal" step="0.1" placeholder="80"></div>
+<div><label for="med">Média (km/L)</label><input id="med" type="number" inputmode="decimal" step="0.1" placeholder="6,0"></div>
+<div><label for="preco">Preço do litro (R$)</label><input id="preco" type="number" inputmode="decimal" step="0.01"></div>
+<div><label for="out">Outros gastos (R$)</label><input id="out" type="number" inputmode="decimal" step="0.01" placeholder="0"></div>
+<div class="full"><label for="corr">Número de corridas (opcional)</label><input id="corr" type="number" inputmode="numeric" min="0" placeholder="12"></div>
+</div>
+<div class="prev">
+<div>Ganho por km<b id="pKm">–</b></div>
+<div>Ganho por hora<b id="pH">–</b></div>
+<div>Por corrida<b id="pC">–</b></div>
+<div>Líquido (livre)<b id="pLiq">–</b></div>
+</div>
+<button id="salvar">Salvar dia</button>
+<button class="sec" id="cancelar" style="margin-top:8px;display:none">Cancelar edição</button>
+<div class="msg" id="msg"></div>
+</div>
+
+<div class="card">
+<h2>Calculadora de consumo (prova real)</h2>
+<div class="msg" style="margin:-6px 0 10px">Ao abastecer, coloque os km rodados desde o último abastecimento e o valor pago. O site confere se o consumo bate.</div>
+<div class="grid">
+<div><label for="ckm">Km rodados</label><input id="ckm" type="number" inputmode="decimal" step="0.1" placeholder="300"></div>
+<div><label for="cpago">Valor pago (R$)</label><input id="cpago" type="number" inputmode="decimal" step="0.01" placeholder="150,00"></div>
+<div><label for="cpreco">Preço do litro (R$)</label><input id="cpreco" type="number" inputmode="decimal" step="0.01"></div>
+<div><label for="clt">Litros (se souber)</label><input id="clt" type="number" inputmode="decimal" step="0.01" placeholder="calcula sozinho"></div>
+<div class="full"><label for="cpainel">Média do painel do carro (km/L, opcional)</label><input id="cpainel" type="number" inputmode="decimal" step="0.1" placeholder="6,0"></div>
+</div>
+<div class="res" id="cres">–</div>
+<div id="cdet" style="white-space:pre-line;font-size:14px;margin:-6px 0 12px"></div>
+<button class="sec" id="usar">Usar como média do dia</button>
+<div class="msg" id="cmsg"></div>
+</div>
+</section>
+
+<section id="pg-historico">
+<div class="card">
+<h2>Histórico <small style="font-weight:400;color:var(--mut)">(🏆 = melhor líquido)</small></h2>
+<div class="wrap"><table>
+<thead><tr><th>Dia</th><th>App</th><th>Bruto</th><th>Tempo</th><th>Km</th><th>km/L</th><th>R$/km</th><th>R$/h</th><th>Corr.</th><th>R$/corr.</th><th>Líquido</th><th></th></tr></thead>
+<tbody id="corpo"></tbody>
+</table></div>
+<div id="vazio" class="msg">Nenhum dia salvo ainda.</div>
+<button class="sec" id="copiar" style="margin-top:12px">Copiar p/ WhatsApp</button>
+</div>
+</section>
+
+<section id="pg-gastos">
+<div class="card">
+<h2 id="gTit">Registrar gasto</h2>
+<div class="grid">
+<div><label for="gData">Data</label><input id="gData" type="date"></div>
+<div><label for="gCat">Categoria</label><select id="gCat"></select></div>
+<div class="full"><label for="gVal">Valor (R$)</label><input id="gVal" type="number" inputmode="decimal" step="0.01" placeholder="50,00"></div>
+<div class="full"><label for="gDesc">Descrição (opcional)</label><input id="gDesc" type="text" maxlength="60" placeholder="Ex.: troca de óleo"></div>
+</div>
+<button id="gSalvar" style="margin-top:12px">Salvar gasto</button>
+<button class="sec" id="gCancelar" style="margin-top:8px;display:none">Cancelar edição</button>
+<div class="msg" id="gMsg"></div>
+</div>
+
+<div class="card">
+<h2>Este mês</h2>
+<div class="stats">
+<div><b id="gTot">R$ 0,00</b><span>gastos no mês</span></div>
+<div><b id="gLiq">R$ 0,00</b><span>líquido do mês</span></div>
+<div><b id="gReal">R$ 0,00</b><span>lucro real</span></div>
+</div>
+<div class="wrap" style="margin-top:12px"><table>
+<thead><tr><th>Categoria</th><th>Total</th></tr></thead>
+<tbody id="corpoGC"></tbody>
+</table></div>
+<div class="msg">O líquido dos dias já desconta uma estimativa de combustível. Por isso, gastos da categoria Combustível não são descontados de novo no lucro real.</div>
+</div>
+
+<div class="card">
+<h2>Todos os gastos</h2>
+<div class="wrap"><table>
+<thead><tr><th>Dia</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th></th></tr></thead>
+<tbody id="corpoG"></tbody>
+</table></div>
+<div id="gVazio" class="msg">Nenhum gasto registrado ainda.</div>
+</div>
+</section>
+
+<section id="pg-resumo">
+<div class="card">
+<h2>📅 Calendário</h2>
+<div class="row" style="align-items:center;margin-bottom:10px">
+<button class="sec" id="calPrev" style="width:56px" aria-label="Mês anterior">◀</button>
+<div id="calTit" style="flex:1;text-align:center;font-weight:700"></div>
+<button class="sec" id="calNext" style="width:56px" aria-label="Próximo mês">▶</button>
+</div>
+<div class="cal" id="calGrid"></div>
+<div class="legenda"><span><i class="lg trab"></i>Trabalhado</span><span><i class="lg folga"></i>Folga</span><span><i class="lg auto"></i>Folga automática</span><span><i class="lg pend"></i>Não informado</span></div>
+<div class="stats" style="margin-top:14px">
+<div><b id="cTrab">0</b><span>dias trabalhados</span></div>
+<div><b id="cFolga">0</b><span>folgas no mês</span></div>
+<div><b id="cMedia">R$ 0,00</b><span>líquido por dia trabalhado</span></div>
+</div>
+<div class="msg" id="cAviso"></div>
+<div class="msg" id="cInfo" style="margin-top:12px"></div>
+<div id="cAcoes"></div>
+<label for="cEsp" style="margin-top:14px">Dias sem registro para virar folga automática</label>
+<input id="cEsp" type="number" inputmode="numeric" min="1" max="10">
+</div>
+<div class="card">
+<h2>Resumo</h2>
+<div class="stats">
+<div><b id="sDias">0</b><span>dias</span></div>
+<div><b id="sBruto">R$ 0</b><span>bruto total</span></div>
+<div><b id="sLiq">R$ 0</b><span>líquido total</span></div>
+</div>
+<div class="row" style="margin:14px 0 8px">
+<button class="sec on" id="pSem">Por semana</button>
+<button class="sec" id="pMes">Por mês</button>
+</div>
+<div class="wrap"><table>
+<thead><tr><th>Período</th><th>Dias</th><th>Bruto</th><th>Líquido</th><th>Líq./hora</th><th>R$/corrida</th></tr></thead>
+<tbody id="corpoP"></tbody>
+</table></div>
+</div>
+
+<div class="card">
+<h2>99 x Uber</h2>
+<div class="wrap"><table>
+<thead><tr><th>App</th><th>Dias</th><th>Bruto</th><th>Líquido</th><th>R$/km</th><th>Líq./hora</th><th>R$/corrida</th></tr></thead>
+<tbody id="corpoC"></tbody>
+</table></div>
+<div class="msg" id="veredito"></div>
+</div>
+</section>
+
+<section id="pg-backup">
+<div class="card">
+<h2>Backup</h2>
+<div class="sub">Guarda uma cópia de todos os dias e metas. Dá para restaurar em outro aparelho.</div>
+<div class="row">
+<button class="sec" id="bBaixar">Baixar backup</button>
+<button class="sec" id="bTexto">Ver texto</button>
+</div>
+<textarea id="bTxt" style="margin-top:10px" placeholder="O texto do backup aparece aqui. Para restaurar, cole o texto e toque em Restaurar."></textarea>
+<button class="sec" id="bRest" style="margin-top:8px">Restaurar do texto</button>
+<div class="msg" id="bMsg"></div>
+<hr style="border:0;border-top:1px solid var(--bd);margin:16px 0">
+<h2>☁️ Sincronização</h2>
+<div class="sub">O código secreto liga este aparelho aos seus dados na nuvem. Para usar em outro celular, copie o link de acesso e abra lá. Não compartilhe com outras pessoas.</div>
+<div class="row"><button class="sec" id="sLink">Copiar link de acesso</button><button class="sec" id="sAgora">Sincronizar agora</button></div>
+<label for="sCod" style="margin-top:10px">Código deste aparelho</label>
+<input id="sCod" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+<button class="sec" id="sUsar" style="margin-top:8px">Usar este código</button>
+<div class="msg" id="sMsg"></div>
+</div>
+</section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
